@@ -1,0 +1,45 @@
+---
+version: '1.0.0'
+services:
+  embedding-service:
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    container_name: embedding_container
+    depends_on:
+      - mysql-db-embedding-service
+    ports:
+      - 3001:3001
+    volumes:
+      - embedding-data:/srv/app
+    networks:
+      - embedding-network
+    environment:
+      - PINE_CONE_END-POINT=xyz.com
+      - DB_HOST=embedding_db_container
+      - MYSQL_USER = root
+      - MYSQL_PASSWORD = root
+      - DB_PORT = 3306
+      - DB_NAME = EMBEDDING
+      - FOLDER_BASE = /srv/UPLOAD/
+
+  mysql-db-embedding-service:
+    image: mysql
+    container_name: embedding_db_container
+    ports:
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - embedding-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root 
+      - MYSQL_USER=admin
+      - MYSQL_DATABASE=EMBEDDING  
+  
+volumes:
+  embedding-data:
+  db-data:
+networks:
+  embedding-network:
