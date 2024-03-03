@@ -1,0 +1,57 @@
+@use "./node_modules/rfs/scss" as rfs;
+@use './../assets/scss/abstracts/variables' as vars;
+@use './../assets/scss/abstracts/mixins/background' as bg;
+@use './../assets/scss/abstracts/color' as shades;
+@use './../assets/scss/abstracts/mixins/font' as font-style;
+@use './../assets/scss/abstracts/mixins/margin' as position;
+
+body {
+    @include rfs.font-size(1.313rem);
+    @include font-style.color(shades.$primary);
+    font-family: vars.$base-font;
+}
+
+.Bothome {
+    &-title-xl {
+        @include rfs.font-size(4rem);
+    }
+
+    &-logo {
+        width: 100%;
+    }
+
+    &-position {
+        @include position.placement(null, null, 0, null);
+        transform: translateY(-12rem);
+    }
+
+    &-bg {
+        &-primary {
+            @include bg.fontNdBgColor(shades.$white, shades.$primary);
+        }
+
+        &-secondary {
+            @include bg.fontNdBgColor(shades.$primary, shades.$tertiary);
+        }
+    }
+}
+
+.fs {
+    &-secondary {
+        @include font-style.color(shades.$secondary);
+    }
+}
+
+.p {
+    &-6 {
+        @include rfs.padding(6rem);
+    }
+
+    &e-16 {
+        @include rfs.padding-right(16rem);
+    }
+}
+
+.adj-right {
+    padding-right: 6%;
+}

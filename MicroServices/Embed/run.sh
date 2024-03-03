@@ -2,7 +2,7 @@
 
 export APP_MODULE=${APP_MODULE:-app.main:app}
 export HOST=${HOST:-0.0.0.0}
-export PORT=${PORT:-3001}
+export PORT=${PORT:-3002}
 export BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
 
 # run gunicorn

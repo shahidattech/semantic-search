@@ -25,11 +25,12 @@ def create_embedding(db:Session, topic_name: str, files: List[UploadFile] = File
             return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                     content="Atleast one file is rerquired to be supplied to create knowledgebase")
 
-        # Save Files on Disk Temporarily--> To be Replaced with S3
+        # Save Files on Disk Temporarily--> To be Replaced with S3 
+        # This is going to use Kubernetes POD storage temporarily
         file_lists = save_files_on_disk(created_by, tenant_id, files)
         # Keep track of the files beings used by the embedding uniquely for further modification
         embedding_id = dbService.create_embedding(topic_name, ",".join(file_lists), created_by, tenant_id, db)
-        print(",".join(file_lists))   
+        print(",".join(file_lists))
 
         # # Trigger Kubernetes Batch JOB for Extraction
         # command = os.getenv("COMMAND_PDF_EMBEDDING", "")
@@ -46,32 +47,32 @@ def create_embedding(db:Session, topic_name: str, files: List[UploadFile] = File
         print("Errr=", Err)
         return JSONResponse(status_code=500, content={"message": "Internal Server Error"})
 
-def triggerKuberNetesBatch(tenant_id:str, created_by:str, skill_id: int, command, file_lists):
-    try:
-        kuber_object = custom_kuber.Kubernetes()
-        image = kuber_object.get_image()
-        container_name = os.getenv("EMBED_CONTAINER_NAME")
-        pull_policy = os.getenv("KUBERNETI_PULL_POLICY")
-        job_id = str(skill_id)
-        pod_id = job_id
-        pod_name = f"{container_name}-pod-{pod_id}"
-        job_name = f"{container_name}-job-{job_id}"
-        namespace = os.getenv("NAMESPACE")
-        script_path = os.getenv("SCRIPT_PATH")
-        args = {
-            'tenant_id':tenant_id,
-            'user_id': created_by,
-            'skill_id': skill_id,
-            'file_lists': file_lists
-        }
-        container = kuber_object.create_container(image, container_name, pull_policy, args, script_path)
-        pod_template = kuber_object.create_pod_template(pod_name, container)
-        job = kuber_object.create_job(job_name, pod_template)
-        api_instance= kubernetes.client.BatchV1Api()
-        api_instance.create_namespaced_job(body=job,namespace=namespace)
-        return True
-    except Exception as Err:
-        logging.error("===Error in triggerKuberNetesBatch:: " + str(Err))
-        raise Err
+# def triggerKuberNetesBatch(tenant_id:str, created_by:str, skill_id: int, command, file_lists):
+#     try:
+#         kuber_object = custom_kuber.Kubernetes()
+#         image = kuber_object.get_image()
+#         container_name = os.getenv("EMBED_CONTAINER_NAME")
+#         pull_policy = os.getenv("KUBERNETI_PULL_POLICY")
+#         job_id = str(skill_id)
+#         pod_id = job_id
+#         pod_name = f"{container_name}-pod-{pod_id}"
+#         job_name = f"{container_name}-job-{job_id}"
+#         namespace = os.getenv("NAMESPACE")
+#         script_path = os.getenv("SCRIPT_PATH")
+#         args = {
+#             'tenant_id':tenant_id,
+#             'user_id': created_by,
+#             'skill_id': skill_id,
+#             'file_lists': file_lists
+#         }
+#         container = kuber_object.create_container(image, container_name, pull_policy, args, script_path)
+#         pod_template = kuber_object.create_pod_template(pod_name, container)
+#         job = kuber_object.create_job(job_name, pod_template)
+#         api_instance= kubernetes.client.BatchV1Api()
+#         api_instance.create_namespaced_job(body=job,namespace=namespace)
+#         return True
+#     except Exception as Err:
+#         logging.error("===Error in triggerKuberNetesBatch:: " + str(Err))
+#         raise Err
 
 

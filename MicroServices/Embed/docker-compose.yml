@@ -1,27 +1,30 @@
 ---
-version: '1.0.0'
+version: '3'
 services:
   embedding-service:
     build: 
       dockerfile: Dockerfile
       context: .
-    container_name: embedding_container
+    container_name: embeddings_container
     depends_on:
       - mysql-db-embedding-service
     ports:
-      - 3001:3001
+      - 3002:3002
     volumes:
-      - embedding-data:/srv/app
+      - embeddings-data_store:/srv/app
     networks:
       - embedding-network
     environment:
       - PINE_CONE_END-POINT=xyz.com
       - DB_HOST=embedding_db_container
-      - MYSQL_USER = root
+      - MYSQL_USER = admin
       - MYSQL_PASSWORD = root
       - DB_PORT = 3306
       - DB_NAME = EMBEDDING
       - FOLDER_BASE = /srv/UPLOAD/
+      - DEPLOYMENT_NAME = KUBER_DEPLOYMENT
+      - KUBER_NAMESPACE = KUBER_NAMESPACE
+      - CONTAINER_NAME = KUBER_CONTAINER
 
   mysql-db-embedding-service:
     image: mysql
@@ -39,7 +42,7 @@ services:
       - MYSQL_DATABASE=EMBEDDING  
   
 volumes:
-  embedding-data:
+  embeddings-data_store:
   db-data:
 networks:
   embedding-network:

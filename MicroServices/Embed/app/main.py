@@ -1,10 +1,10 @@
 from fastapi import FastAPI
-from app.config.config import settings
+from app.config.configs import settings
 from fastapi.middleware.cors import CORSMiddleware
 
 
-import app.api.v1.health as health_router
-import app.api.v1.embed as embed_router
+import app.api.v1.healthz as health_router
+import app.api.v1.embeds as embeds_router
 
 
 app =FastAPI(
@@ -25,6 +25,4 @@ app.add_middleware(
 )
 
 app.include_router(health_router.router)
-app.include_router(embed_router.router)
-
-
+app.include_router(embeds_router.router)

@@ -21,12 +21,12 @@ class Kubernetes:
     def create_namespace(self, namespace):
 
         namespaces = self.core_api.list_namespace()
-        all_namespaces = []
+        current_namespaces = []
         for ns in namespaces.items:
-            all_namespaces.append(ns.metadata.name)
+            current_namespaces.append(ns.metadata.name)
 
-        if namespace in all_namespaces:
-            logging.info(f"Namespace {namespace} already exists. Reusing the same name Space.")
+        if namespace in current_namespaces:
+            logging.info(f"Namespace {namespace} already exists, Proceeding to use the same Namespace")
         else:
             namespace_metadata = client.V1ObjectMeta(name=namespace_name)
             self.core_api.create_namespace(
