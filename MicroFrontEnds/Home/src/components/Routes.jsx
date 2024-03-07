@@ -1,5 +1,6 @@
 import { createHashRouter, Navigate, RouterProvider }  from "react-router-dom";
-import { Login } from 'Auth/login';
+import { lazy } from "react";
+const Login = lazy(()=>import('Auth/Login'))
 
 export default function Routes() {
     const router = createHashRouter([

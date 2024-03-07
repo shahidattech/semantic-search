@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {BrowserRouter} from "react-router-dom";
 import { createRoot } from 'react-dom/client';
-import { Login } from "./components/Login";
+import {Login} from './components/Login'
 
 import "./index.css";
 

@@ -47,7 +47,7 @@ module.exports = (_, argv) => ({
       exposes: {
         "./api-caller": "./src/services/apiCaller",
         // "./set-session": "./src/utilities/setSession",
-        "./store": "./src/store"
+        "./StoreProvider": "./src/store/providers/StoreProvider"
         // "./components": "./src/components"
       },
       shared: {
